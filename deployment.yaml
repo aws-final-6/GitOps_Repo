@@ -17,6 +17,6 @@ spec:
         - name: mlr-dev-fe-hbr-sec
       containers:
         - name: test-pod
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:6
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:7
           ports:
             - containerPort: 80
