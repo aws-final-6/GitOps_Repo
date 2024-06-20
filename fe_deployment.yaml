@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-dpl
+  name: mlr-dev-fe-dpl
   namespace: mlr-dev-fe-ns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: test-dpl
+      app: mlr-dev-fe-dpl
   template:
     metadata:
       labels:
-        app: test-dpl
+        app: mlr-dev-fe-dpl
     spec:
       imagePullSecrets:
         - name: mlr-dev-fe-hbr-sec
       containers:
-        - name: test-pod
+        - name: mlr-dev-fe-dpl-pod
           image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:11
           ports:
             - containerPort: 80
