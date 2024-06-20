@@ -14,23 +14,23 @@ spec:
         app: frontend
     spec:
       initContainers:
-      - name: wait-for-backend
-        image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-        command: ['sh', '-c', "until nslookup mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
+        - name: wait-for-backend
+          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
       containers:
-      - name: frontend
-        image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:12
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3000
-        env:
-        - name: API_URL
-          valueFrom:
-            configMapKeyRef:
-              name: mlr-dev-fe-cm
-              key: API_URL
-        # - name: FAST_API_URL
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: mlr-dev-fe-cm
-        #       key: FAST_API_URL
+        - name: frontend
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:13
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-dev-fe-cm
+                  key: API_URL
+          # - name: FAST_API_URL
+          #   valueFrom:
+          #     configMapKeyRef:
+          #       name: mlr-dev-fe-cm
+          #       key: FAST_API_URL
