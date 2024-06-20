@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-dp2
+  namespace: mlr-dev-be-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-dp2
+  template:
+    metadata:
+      labels:
+        app: test-dp2
+    spec:
+      imagePullSecrets:
+        - name: mlr-dev-be-hbr-sec
+      containers:
+        - name: test-pod
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img
+          ports:
+            - containerPort: 80
