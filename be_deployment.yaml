@@ -17,6 +17,6 @@ spec:
         - name: mlr-dev-be-hbr-sec
       containers:
         - name: test-pod
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img:5
           ports:
             - containerPort: 80
