@@ -14,87 +14,87 @@ spec:
         app: backendnode
     spec:
       initContainers:
-        - name: wait-for-db
-          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-db-svc-sts.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
+      - name: wait-for-db
+        image: 192.168.56.200/mylittlerecipebook/busybox:1.31
+        command: ['sh', '-c', "until nslookup mlr-dev-db-svc-sts.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
       containers:
-        - name: backend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img:6
-          ports:
-            - containerPort: 3000
-          env:
-            - name: MONGO_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: MONGO_URI
-            - name: FRONT_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: FRONT_URI
-            - name: KAKAO_REDIRECT_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: KAKAO_REDIRECT_URI
-            - name: KAKAO_SCOPE
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: KAKAO_SCOPE
-            - name: NAVER_REDIRECT_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: NAVER_REDIRECT_URI
-            - name: NAVER_STATE
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: NAVER_STATE
-            - name: GOOGLE_REDIRECT_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: GOOGLE_REDIRECT_URI
-            - name: GOOGLE_SCOPE
-              valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
-                  key: GOOGLE_SCOPE
-            - name: KAKAO_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-nod
-                  key: KAKAO_CLIENT_ID
-            - name: KAKAO_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-nod
-                  key: KAKAO_CLIENT_SECRET
-            - name: NAVER_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-nod
-                  key: NAVER_CLIENT_ID
-            - name: NAVER_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-nod
-                  key: NAVER_CLIENT_SECRET
-            - name: GOOGLE_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-nod
-                  key: GOOGLE_CLIENT_ID
-            - name: GOOGLE_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-nod
-                  key: GOOGLE_CLIENT_SECRET
-            - name: YOUTUBE_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: mlr-dev-be-sec-fap
-                  key: YOUTUBE_API_KEY
+      - name: backend
+        image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img:6
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: MONGO_URI
+        - name: FRONT_URI
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: FRONT_URI
+        - name: KAKAO_REDIRECT_URI
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: KAKAO_REDIRECT_URI
+        - name: KAKAO_SCOPE
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: KAKAO_SCOPE
+        - name: NAVER_REDIRECT_URI
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: NAVER_REDIRECT_URI
+        - name: NAVER_STATE
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: NAVER_STATE
+        - name: GOOGLE_REDIRECT_URI
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: GOOGLE_REDIRECT_URI
+        - name: GOOGLE_SCOPE
+          valueFrom:
+            configMapKeyRef:
+              name: mlr-dev-be-cm-nod
+              key: GOOGLE_SCOPE
+        - name: KAKAO_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-nod
+              key: KAKAO_CLIENT_ID
+        - name: KAKAO_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-nod
+              key: KAKAO_CLIENT_SECRET
+        - name: NAVER_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-nod
+              key: NAVER_CLIENT_ID
+        - name: NAVER_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-nod
+              key: NAVER_CLIENT_SECRET
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-nod
+              key: GOOGLE_CLIENT_ID
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-nod
+              key: GOOGLE_CLIENT_SECRET
+        - name: YOUTUBE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-be-sec-fap
+              key: YOUTUBE_API_KEY
