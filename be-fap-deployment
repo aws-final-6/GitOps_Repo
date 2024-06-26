@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlr-dev-be-dpl-fap
+  namespace: mlr-dev-be-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-dev-db-svc-sfs.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
+      containers:
+        - name: backend
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-fap:1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
+            - name: YOUTUBE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mlr-dev-be-sec-fap
+                  key: YOUTUBE_API_KEY
