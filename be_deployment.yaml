@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-be-dpl
+  name: mlr-dev-be-dpl-nod
   namespace: mlr-dev-be-ns
 spec:
   replicas: 3
