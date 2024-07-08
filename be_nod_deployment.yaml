@@ -16,10 +16,10 @@ spec:
       initContainers:
         - name: wait-for-db
           image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-db-svc-sfs.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup mlr-dev-db-primary-svc.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
       containers:
         - name: backend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-nod:11
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-nod:13
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -89,11 +89,16 @@ spec:
                 secretKeyRef:
                   name: mlr-dev-be-sec-nod
                   key: GOOGLE_CLIENT_SECRET
-            - name: MYSQL_HOST
+            - name: MYSQL_WRITE_HOST
               valueFrom:
                 configMapKeyRef:
                   name: mlr-dev-be-cm-nod
-                  key: MYSQL_HOST
+                  key: MYSQL_WRITE_HOST
+            - name: MYSQL_READ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-dev-be-cm-nod
+                  key: MYSQL_READ_HOST
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
