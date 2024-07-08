@@ -92,20 +92,20 @@ spec:
             - name: MYSQL_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm
+                  name: mlr-dev-be-cm-nod
                   key: MYSQL_HOST
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-secret
+                  name: mlr-dev-be-sec-nod
                   key: MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-secret
+                  name: mlr-dev-be-sec-nod
                   key: MYSQL_PASSWORD
             - name: MYSQL_DATABASE
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-secret
+                  name: mlr-dev-be-sec-nod
                   key: MYSQL_DATABASE
