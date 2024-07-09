@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mlr-dev-db-sts
+  namespace: mlr-dev-db-ns
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: "mlr-dev-db-svc"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: 192.168.56.200/mylittlerecipebook/mlr-dev-db-img-msq:1.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-db-sec
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-db-sec
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-db-sec
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mlr-dev-db-sec
+              key: MYSQL_PASSWORD
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-persistent-storage
+      namespace: mlr-dev-db-ns
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "openebs-hostpath"
+      resources:
+        requests:
+          storage: 10Gi
