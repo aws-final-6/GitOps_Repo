@@ -16,7 +16,7 @@ spec:
       initContainers:
         - name: wait-for-db
           image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-rds-svc.redis.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup mlr-dev-rds-svc.mlr-dev-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: backend
           image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-fap:8
