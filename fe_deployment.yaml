@@ -19,7 +19,6 @@ spec:
           command: ['sh', '-c', "until nslookup mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
       containers:
         - name: frontend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:3
           image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:4
           imagePullPolicy: Always
           ports:
