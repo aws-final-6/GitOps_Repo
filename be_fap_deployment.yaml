@@ -16,13 +16,16 @@ spec:
       initContainers:
         - name: wait-for-db
           image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-db-svc-sfs.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup mlr-dev-rds-svc-pri.redis.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: backend
           image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-fap:5
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: mlr-dev-be-cm-fap
           env:
             - name: YOUTUBE_API_KEY
               valueFrom:
