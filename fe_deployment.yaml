@@ -1,36 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-fe-dpl
-  namespace: mlr-dev-fe-ns
+  name: mlr-dev-be-dpl-fap
+  namespace: mlr-dev-be-ns
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: frontend
+      app: backend
   template:
     metadata:
       labels:
-        app: frontend
+        app: backend
     spec:
       initContainers:
-        - name: wait-for-backend
+        - name: wait-for-redis
           image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup mlr-dev-rds-svc.redis.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
-        - name: frontend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:4
+        - name: backend
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-fap:5
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: mlr-dev-be-cm-fap
           env:
-            - name: API_URL
+            - name: YOUTUBE_API_KEY
               valueFrom:
-                configMapKeyRef:
-                  name: mlr-dev-fe-cm
-                  key: API_URL
-          # - name: FAST_API_URL
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       name: mlr-dev-fe-cm
-          #       key: FAST_API_URL
+                secretKeyRef:
+                  name: mlr-dev-be-sec-fap
+                  key: YOUTUBE_API_KEY
