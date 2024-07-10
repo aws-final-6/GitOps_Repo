@@ -8,10 +8,12 @@ spec:
   selector:
     matchLabels:
       app: backend
+      tier: fast
   template:
     metadata:
       labels:
         app: backend
+        tier: fast
     spec:
       initContainers:
         - name: wait-for-db
