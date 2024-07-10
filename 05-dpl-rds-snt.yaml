@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlr-dev-rds-dpl-snt
+  namespace: mlr-dev-rds-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mlr-dev-rds-dpl-snt
+  template:
+    metadata:
+      labels:
+        app: mlr-dev-rds-dpl-snt
+    spec:
+      initContainers:
+      - name: setup-sentinel
+        image: 192.168.56.200/mylittlerecipebook/redis:7.0-alpine
+        imagePullPolicy: Always
+        command:
+          - /bin/sh
+          - -c
+          - |
+            sh /mnt/config/setup-sentinel.sh
+        volumeMounts:
+        - name: config
+          mountPath: /mnt/config
+        - name: sentinel-config
+          mountPath: /mnt/sentinel
+      containers:
+      - name: sentinel
+        image: 192.168.56.200/mylittlerecipebook/redis:7.0-alpine
+        imagePullPolicy: Always
+        command:
+          - redis-server
+          - /mnt/sentinel/sentinel.conf
+          - --sentinel
+        ports:
+        - containerPort: 26379
+        volumeMounts:
+        - name: sentinel-config
+          mountPath: /mnt/sentinel
+      volumes:
+      - name: config
+        configMap:
+          name: mlr-dev-rds-cm-snt
+      - name: sentinel-config
+        emptyDir: {}
