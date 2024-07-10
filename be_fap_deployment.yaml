@@ -7,13 +7,13 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-    - app: backend
-    - tier: fast
+      app: backend
+      tier: fast
   template:
     metadata:
       labels:
-      - app: backend
-      - tier: fast
+        app: backend
+        tier: fast
     spec:
       initContainers:
         - name: wait-for-db
