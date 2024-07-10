@@ -16,7 +16,7 @@ spec:
         tier: fast
     spec:
       initContainers:
-        - name: wait-for-db
+        - name: wait-for-redis
           image: 192.168.56.200/mylittlerecipebook/busybox:1.31
           command: ['sh', '-c', "until nslookup mlr-dev-rds-svc.mlr-dev-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
