@@ -1,0 +1,27 @@
+# apiVersion: autoscaling/v1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: mlr-dev-fe-hpa
+#   namespace: mlr-dev-fe-ns
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: mlr-dev-fe-dpl
+#   minReplicas: 1
+#   maxReplicas: 10
+#   targetCPUUtilizationPercentage: 80
+# ---
+# apiVersion: autoscaling/v1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: mlr-dev-be-hpa
+#   namespace: mlr-dev-be-ns
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: mlr-dev-be-dpl
+#   minReplicas: 1
+#   maxReplicas: 10
+#   targetCPUUtilizationPercentage: 80

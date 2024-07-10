@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mlr-dev-fe-ns
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mlr-dev-be-ns
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mlr-dev-db-ns

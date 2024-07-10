@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlr-dev-fe-svc
+  namespace: mlr-dev-fe-ns
+spec:
+  selector:
+    app: frontend
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 4000
+    targetPort: 4000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlr-dev-be-svc-nod
+  namespace: mlr-dev-be-ns
+spec:
+  selector:
+    app: backend
+    tier: node
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlr-dev-be-svc-fap
+  namespace: mlr-dev-be-ns
+spec:
+  selector:
+    app: backend
+    tier: fast
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlr-dev-db-svc
+  namespace: mlr-dev-db-ns
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  clusterIP: None
+  selector:
+    app: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlr-dev-db-svc-fst
+  namespace: mlr-dev-db-ns
+spec:
+  selector:
+    statefulset.kubernetes.io/pod-name: mlr-dev-db-sts-0
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
+    nodePort: 32301
