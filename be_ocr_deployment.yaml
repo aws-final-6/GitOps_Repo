@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlr-dev-be-dpl-ocr
+  namespace: mlr-dev-be-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+      tier: ocr
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: ocr
+    spec:
+      containers:
+        - name: ocr-backend
+          image: 192.168.56.200/mylittlerecipebook/ocr-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
