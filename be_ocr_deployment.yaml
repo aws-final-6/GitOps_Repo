@@ -15,10 +15,12 @@ spec:
         app: backend
         tier: ocr
     spec:
+      nodeSelector:
+        alpha.eksctl.io/nodegroup-name: mlr-prd-eks-ocr-ng
       initContainers:
         - name: wait-for-db
           image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: ocr-backend
           image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-ocr:1
