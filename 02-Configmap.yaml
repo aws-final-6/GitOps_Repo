@@ -6,6 +6,7 @@ metadata:
 data:
   API_URL: "http://mlr-prd-be-svc-nod.mlr-prd-be-ns.svc.cluster.local:3000"
   FAST_API_URL: "http://mlr-prd-be-svc-fap.mlr-prd-be-ns.svc.cluster.local:5000"
+  OCR_API_URL: "http://mlr-prd-be-svc-ocr.mlr-prd-be-ns.svc.cluster.local:8000"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -15,11 +16,11 @@ metadata:
 data:
   MYSQL_HOST: "mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local"
   FRONT_URI: "https://book.mylittle.recipes"
-  KAKAO_REDIRECT_URI: "https://book.mylittle.recipes/back/auth/kakao/redirect"
+  KAKAO_REDIRECT_URI: "https://auth.mylittle.recipes/auth/kakao/redirect"
   KAKAO_SCOPE: "openid,account_email"
-  NAVER_REDIRECT_URI: "https://book.mylittle.recipes/back/auth/naver/redirect"
+  NAVER_REDIRECT_URI: "https://auth.mylittle.recipes/auth/naver/redirect"
   NAVER_STATE: "1234567890"
-  GOOGLE_REDIRECT_URI: "https://book.mylittle.recipes/back/auth/google/redirect"
+  GOOGLE_REDIRECT_URI: "https://auth.mylittle.recipes/auth/google/redirect"
   GOOGLE_SCOPE: "openid email"
 ---
 apiVersion: v1
