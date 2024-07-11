@@ -16,13 +16,17 @@ phases:
       - aws sts get-caller-identity
       - echo Setting up kubectl...
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - chmod +x kubectl
-      - mv kubectl /usr/local/bin/
+      - chmod +x ./kubectl
+      - mkdir -p /usr/local/bin
+      - mv ./kubectl /usr/local/bin/
+      - echo kubectl version
+      - kubectl version --client
 
   pre_build:
     commands:
       - echo Verifying EKS cluster access...
-      - aws eks describe-cluster --region ap-northeast-2 --name mlr-prd-eks-cls
+      - aws eks describe-cluster --region ${AWS_REGION} --name mlr-prd-eks-cls --debug
+      - kubectl get nodes
       - echo Setting up kubeconfig...
       - aws eks --region ap-northeast-2 update-kubeconfig --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
       - echo "Kubeconfig file contents:"
