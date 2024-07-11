@@ -18,13 +18,13 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - frontend
-            topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - frontend
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-backend
           image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
@@ -46,8 +46,11 @@ spec:
                 configMapKeyRef:
                   name: mlr-prd-fe-cm
                   key: FAST_API_URL
+<<<<<<< HEAD
             - name: OCR_API_URL
               valueFrom:
                 configMapKeyRef:
                   name: mlr-prd-fe-cm
                   key: OCR_API_URL
+=======
+>>>>>>> 587b713b0c4fd0dba66f3bf89e58eac88593b0dc

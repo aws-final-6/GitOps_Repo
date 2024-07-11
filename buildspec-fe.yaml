@@ -1,0 +1,41 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Setting up kubectl...
+      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - chmod +x kubectl
+      - mv kubectl /usr/local/bin/
+      - echo Logging in to Amazon ECR in Seoul region...
+      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+  pre_build:
+    commands:
+      - echo Verifying AWS CLI credentials...
+      - aws sts get-caller-identity
+      - echo Verifying EKS cluster access...
+      - aws eks describe-cluster --region ap-northeast-2 --name mlr-prd-eks-cls
+      - echo Setting up kubeconfig...
+      - aws eks --region ap-northeast-2 update-kubeconfig --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
+      - echo "Kubeconfig file contents:"
+      - cat ~/.kube/config
+
+  build:
+    commands:
+      - echo Cloning repository...
+      - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
+      - cd food-frontend
+      - echo Verifying Kubernetes access...
+      - kubectl get nodes
+      - echo Updating Kubernetes deployment with the new image...
+      - kubectl set image deployment/my-deployment my-container=${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:${IMAGE_TAG} --record
+
+  post_build:
+    commands:
+      - echo Deployment completed.
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
