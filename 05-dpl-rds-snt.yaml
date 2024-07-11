@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-rds-dpl-snt
-  namespace: mlr-dev-rds-ns
+  name: mlr-prd-rds-dpl-snt
+  namespace: mlr-prd-rds-ns
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: mlr-dev-rds-dpl-snt
+      app: mlr-prd-rds-dpl-snt
   template:
     metadata:
       labels:
-        app: mlr-dev-rds-dpl-snt
+        app: mlr-prd-rds-dpl-snt
     spec:
       initContainers:
       - name: setup-sentinel
-        image: 192.168.56.200/mylittlerecipebook/redis:7.0-alpine
+        image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/redis:7.0-alpine
         imagePullPolicy: Always
         command:
           - /bin/sh
@@ -29,7 +29,7 @@ spec:
           mountPath: /mnt/sentinel
       containers:
       - name: sentinel
-        image: 192.168.56.200/mylittlerecipebook/redis:7.0-alpine
+        image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/redis:7.0-alpine
         imagePullPolicy: Always
         command:
           - redis-server
@@ -43,6 +43,6 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: mlr-dev-rds-cm-snt
+          name: mlr-prd-rds-cm-snt
       - name: sentinel-config
         emptyDir: {}

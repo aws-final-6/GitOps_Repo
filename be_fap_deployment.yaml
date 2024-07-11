@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-be-dpl-fap
-  namespace: mlr-dev-be-ns
+  name: mlr-prd-be-dpl-fap
+  namespace: mlr-prd-be-ns
 spec:
   replicas: 3
   selector:
@@ -15,22 +15,34 @@ spec:
         app: backend
         tier: fast
     spec:
+      nodeSelector:
+        alpha.eksctl.io/nodegroup-name: mlr-prd-eks-app-ng
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - fast
+            topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-redis
-          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-rds-svc.mlr-dev-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: backend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-fap:27
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-fap:16
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
           envFrom:
             - configMapRef:
-                name: mlr-dev-be-cm-fap
+                name: mlr-prd-be-cm-fap
           env:
             - name: YOUTUBE_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-fap
+                  name: mlr-prd-be-sec-fap
                   key: YOUTUBE_API_KEY

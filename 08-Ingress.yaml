@@ -1,43 +1,50 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mlr-dev-fe-ing
-  namespace: mlr-dev-fe-ns
+  name: mlr-prd-fe-ing
+  namespace: mlr-prd-fe-ns
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-2:761278642645:certificate/4cc6737b-d6a2-46c0-a448-e52ae2886b79"
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
-  - http:
+  - host: book.mylittle.recipes
+    http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: mlr-dev-fe-svc
+            name: mlr-prd-fe-svc
             port:
               number: 4000
-  tls:
-  - secretName: mlr-dev-tls-sec
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mlr-dev-be-ing
-  namespace: mlr-dev-be-ns
+  name: mlr-prd-be-ing
+  namespace: mlr-prd-be-ns
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
-  - http:
+  - host: book.mylittle.recipes
+    http:
       paths:
-      - path: /back(/|$)(.*)
+      - path: /back
         pathType: ImplementationSpecific
         backend:
           service:
-            name: mlr-dev-be-svc-nod
+            name: mlr-prd-be-svc-nod
             port:
               number: 3000

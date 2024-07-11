@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-fe-dpl
-  namespace: mlr-dev-fe-ns
+  name: mlr-prd-fe-dpl
+  namespace: mlr-prd-fe-ns
 spec:
   replicas: 3
   selector:
@@ -13,13 +13,25 @@ spec:
       labels:
         app: frontend
     spec:
+      nodeSelector:
+        alpha.eksctl.io/nodegroup-name: mlr-prd-eks-app-ng
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - frontend
+            topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-backend
-          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-prd-be-svc-nod.mlr-prd-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
       containers:
         - name: frontend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-fe-img:10
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-fe-img:9
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -27,10 +39,10 @@ spec:
             - name: API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-fe-cm
+                  name: mlr-prd-fe-cm
                   key: API_URL
             - name: FAST_API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-fe-cm
+                  name: mlr-prd-fe-cm
                   key: FAST_API_URL

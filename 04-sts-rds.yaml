@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mlr-dev-rds-sts
-  namespace: mlr-dev-rds-ns
+  name: mlr-prd-rds-sts
+  namespace: mlr-prd-rds-ns
 spec:
-  serviceName: mlr-dev-rds-svc
+  serviceName: mlr-prd-rds-svc
   replicas: 3
   selector:
     matchLabels:
-      app: mlr-dev-rds-sts
+      app: mlr-prd-rds-sts
   template:
     metadata:
       labels:
-        app: mlr-dev-rds-sts
+        app: mlr-prd-rds-sts
     spec:
       initContainers:
       - name: setup-primary-replica
-        image: 192.168.56.200/mylittlerecipebook/redis:7.0-alpine
+        image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/redis:7.0-alpine
         imagePullPolicy: Always
         command:
           - /bin/sh
           - -c
           - |
             set -ex
-            if [ "$(hostname)" = "mlr-dev-rds-sts-0" ]; then
+            if [ "$(hostname)" = "mlr-prd-rds-sts-0" ]; then
               echo "replicaof no one" > /mnt/config/redis.conf
             else
-              PRIMARY_IP=$(getent hosts mlr-dev-rds-sts-0.mlr-dev-rds-svc.mlr-dev-rds-ns.svc.cluster.local | awk '{ print $1 }')
+              PRIMARY_IP=$(getent hosts mlr-prd-rds-sts-0.mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local | awk '{ print $1 }')
               while [ -z "$PRIMARY_IP" ]; do
                 sleep 5
-                PRIMARY_IP=$(getent hosts mlr-dev-rds-sts-0.mlr-dev-rds-svc.mlr-dev-rds-ns.svc.cluster.local | awk '{ print $1 }')
+                PRIMARY_IP=$(getent hosts mlr-prd-rds-sts-0.mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local | awk '{ print $1 }')
               done
               echo "replicaof $PRIMARY_IP 6379" > /mnt/config/redis.conf
             fi
@@ -38,7 +38,7 @@ spec:
           mountPath: /mnt/config
       containers:
       - name: redis
-        image: 192.168.56.200/mylittlerecipebook/redis:7.0-alpine
+        image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/redis:7.0-alpine
         imagePullPolicy: Always
         command:
           - redis-server

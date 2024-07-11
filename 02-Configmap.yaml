@@ -1,34 +1,34 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mlr-dev-fe-cm
-  namespace: mlr-dev-fe-ns
+  name: mlr-prd-fe-cm
+  namespace: mlr-prd-fe-ns
 data:
-  API_URL: "http://mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local:3000"
-  FAST_API_URL: "http://mlr-dev-be-svc-fap.mlr-dev-be-ns.svc.cluster.local:5000"
+  API_URL: "http://mlr-prd-be-svc-nod.mlr-prd-be-ns.svc.cluster.local:3000"
+  FAST_API_URL: "http://mlr-prd-be-svc-fap.mlr-prd-be-ns.svc.cluster.local:5000"
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mlr-dev-be-cm-nod
-  namespace: mlr-dev-be-ns
+  name: mlr-prd-be-cm-nod
+  namespace: mlr-prd-be-ns
 data:
-  MYSQL_HOST: "mlr-dev-db-svc.mlr-dev-db-ns.svc.cluster.local"
-  FRONT_URI: "https://192.168.0.206:32423"
-  KAKAO_REDIRECT_URI: "https://192.168.0.206:32423/back/auth/kakao/redirect"
+  MYSQL_HOST: "mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local"
+  FRONT_URI: "https://book.mylittle.recipes"
+  KAKAO_REDIRECT_URI: "https://book.mylittle.recipes/back/auth/kakao/redirect"
   KAKAO_SCOPE: "openid,account_email"
-  NAVER_REDIRECT_URI: "https://192.168.0.206:32423/back/auth/naver/redirect"
+  NAVER_REDIRECT_URI: "https://book.mylittle.recipes/back/auth/naver/redirect"
   NAVER_STATE: "1234567890"
-  GOOGLE_REDIRECT_URI: "https://192.168.0.206:32423/back/auth/google/redirect"
+  GOOGLE_REDIRECT_URI: "https://book.mylittle.recipes/back/auth/google/redirect"
   GOOGLE_SCOPE: "openid email"
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mlr-dev-be-cm-fap
-  namespace: mlr-dev-be-ns
+  name: mlr-prd-be-cm-fap
+  namespace: mlr-prd-be-ns
 data:
-  SENTINEL_HOST: "mlr-dev-rds-svc-snt.mlr-dev-rds-ns.svc.cluster.local"
+  SENTINEL_HOST: "mlr-prd-rds-svc-snt.mlr-prd-rds-ns.svc.cluster.local"
   SENTINEL_PORT: "26379"
   SENTINEL_MASTER_NAME: "mymaster"
 

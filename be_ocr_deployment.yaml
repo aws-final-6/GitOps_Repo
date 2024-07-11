@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-be-dpl-ocr
-  namespace: mlr-dev-be-ns
+  name: mlr-prd-be-dpl-ocr
+  namespace: mlr-prd-be-ns
 spec:
   replicas: 3
   selector:
@@ -15,13 +15,13 @@ spec:
         app: backend
         tier: ocr
     spec:
-	  initContainers:
-        - name: wait-for-ocr
-          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-ocr-svc.mlr-dev-ocr-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
+      initContainers:
+        - name: wait-for-db
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
       containers:
         - name: ocr-backend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-ocr:1
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

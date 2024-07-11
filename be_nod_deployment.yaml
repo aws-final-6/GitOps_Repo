@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlr-dev-be-dpl-nod
-  namespace: mlr-dev-be-ns
+  name: mlr-prd-be-dpl-nod
+  namespace: mlr-prd-be-ns
 spec:
   replicas: 3
   selector:
@@ -15,13 +15,25 @@ spec:
         app: backend
         tier: node
     spec:
+      nodeSelector:
+        alpha.eksctl.io/nodegroup-name: mlr-prd-eks-app-ng
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - node
+            topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-db
-          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
-          command: ['sh', '-c', "until nslookup mlr-dev-db-svc.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
       containers:
         - name: backend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-nod:18
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-nod:18
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -29,85 +41,85 @@ spec:
             - name: FRONT_URI
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: FRONT_URI
             - name: KAKAO_REDIRECT_URI
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: KAKAO_REDIRECT_URI
             - name: KAKAO_SCOPE
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: KAKAO_SCOPE
             - name: NAVER_REDIRECT_URI
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: NAVER_REDIRECT_URI
             - name: NAVER_STATE
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: NAVER_STATE
             - name: GOOGLE_REDIRECT_URI
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: GOOGLE_REDIRECT_URI
             - name: GOOGLE_SCOPE
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: GOOGLE_SCOPE
             - name: KAKAO_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: KAKAO_CLIENT_ID
             - name: KAKAO_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: KAKAO_CLIENT_SECRET
             - name: NAVER_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: NAVER_CLIENT_ID
             - name: NAVER_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: NAVER_CLIENT_SECRET
             - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: GOOGLE_CLIENT_ID
             - name: GOOGLE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: GOOGLE_CLIENT_SECRET
             - name: MYSQL_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: mlr-dev-be-cm-nod
+                  name: mlr-prd-be-cm-nod
                   key: MYSQL_HOST
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: MYSQL_PASSWORD
             - name: MYSQL_DATABASE
               valueFrom:
                 secretKeyRef:
-                  name: mlr-dev-be-sec-nod
+                  name: mlr-prd-be-sec-nod
                   key: MYSQL_DATABASE

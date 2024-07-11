@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlr-dev-rds-svc
-  namespace: mlr-dev-rds-ns
+  name: mlr-prd-rds-svc
+  namespace: mlr-prd-rds-ns
 spec:
   clusterIP: None
   selector:
-    app: mlr-dev-rds-sts
+    app: mlr-prd-rds-sts
   ports:
     - port: 6379
       targetPort: 6379
@@ -15,11 +15,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlr-dev-rds-svc-snt
-  namespace: mlr-dev-rds-ns
+  name: mlr-prd-rds-svc-snt
+  namespace: mlr-prd-rds-ns
 spec:
   ports:
   - port: 26379
     targetPort: 26379
   selector:
-    app: mlr-dev-rds-dpl-snt
+    app: mlr-prd-rds-dpl-snt

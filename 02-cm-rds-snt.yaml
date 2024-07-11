@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mlr-dev-rds-cm-snt
-  namespace: mlr-dev-rds-ns
+  name: mlr-prd-rds-cm-snt
+  namespace: mlr-prd-rds-ns
 data:
   setup-sentinel.sh: |
     #!/bin/sh
-    MASTER_IP=$(nslookup mlr-dev-rds-sts-0.mlr-dev-rds-svc.mlr-dev-rds-ns.svc.cluster.local | awk '/^Address: / { print $2 }')
+    MASTER_IP=$(nslookup mlr-prd-rds-sts-0.mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local | awk '/^Address: / { print $2 }')
     if [ -z "$MASTER_IP" ]; then
       echo "Could not resolve Redis master IP"
       exit 1
