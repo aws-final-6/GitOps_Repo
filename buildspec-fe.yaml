@@ -3,18 +3,18 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Setting up AWS CLI credentials...
-      - mkdir -p ~/.aws
-      - echo "[default]" > ~/.aws/credentials
-      - echo "aws_access_key_id=${AWS_ACCESS_SU_ID}" >> ~/.aws/credentials
-      - echo "aws_secret_access_key=${AWS_SECRET_SU_KEY}" >> ~/.aws/credentials
-      - echo "[default]" > ~/.aws/config
-      - echo "region=ap-northeast-2" >> ~/.aws/config
-      - cat ~/.aws/credentials
-      - cat ~/.aws/config
-      - echo Verifying AWS CLI credentials...
-      - aws sts get-caller-identity
-      - echo Setting up kubectl...
+      # - echo Setting up AWS CLI credentials...
+      # - mkdir -p ~/.aws
+      # - echo "[default]" > ~/.aws/credentials
+      # - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
+      # - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
+      # - echo "[default]" > ~/.aws/config
+      # - echo "region=ap-northeast-2" >> ~/.aws/config
+      # - cat ~/.aws/credentials
+      # - cat ~/.aws/config
+      # - echo Verifying AWS CLI credentials...
+      # - aws sts get-caller-identity
+      # - echo Setting up kubectl...
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x ./kubectl
       - mkdir -p /usr/local/bin
