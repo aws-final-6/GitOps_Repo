@@ -13,7 +13,7 @@ phases:
   pre_build:
     commands:
       - echo Setting up kubeconfig...
-      - aws eks --region us-east-1 update-kubeconfig --name mlr-prd-eks-cls
+      - aws eks --region ap-northeast-2 update-kubeconfig --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
 
   build:
     commands:
