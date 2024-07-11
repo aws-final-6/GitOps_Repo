@@ -3,36 +3,46 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Setting up AWS CLI credentials...
+      - set -e
+      - echo "Updating package list and installing dependencies..."
+      - apt-get update -y
+      - apt-get install -y curl unzip jq
+
+      - echo "Setting up AWS CLI credentials..."
       - mkdir -p ~/.aws
       - echo "[default]" > ~/.aws/credentials
       - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
       - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
       - echo "[default]" > ~/.aws/config
       - echo "region=ap-northeast-2" >> ~/.aws/config
+      - echo "AWS CLI credentials and config:"
       - cat ~/.aws/credentials
       - cat ~/.aws/config
-      - echo Verifying AWS CLI credentials...
+      - echo "Verifying AWS CLI credentials..."
       - aws sts get-caller-identity
-      - echo Setting up kubectl...
+
+      - echo "Setting up kubectl..."
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x ./kubectl
-      - mkdir -p /usr/local/bin
       - mv ./kubectl /usr/local/bin/
-      - echo Setting up aws-iam-authenticator...
+
+      - echo "Setting up aws-iam-authenticator..."
       - curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator
       - chmod +x ./aws-iam-authenticator
       - mv ./aws-iam-authenticator /usr/local/bin/
-      - echo kubectl version
+
+      - echo "kubectl version:"
       - kubectl version --client
-      
 
   pre_build:
     commands:
-      - echo Verifying EKS cluster access...
+      - set -e
+      - echo "Verifying EKS cluster access..."
       - aws eks describe-cluster --region ${AWS_REGION} --name mlr-prd-eks-cls --debug
-      - echo Setting up kubeconfig...
+
+      - echo "Setting up kubeconfig..."
       - aws eks update-kubeconfig --region ${AWS_REGION} --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
+
       - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
       - kubectl config current-context
@@ -40,19 +50,30 @@ phases:
 
   build:
     commands:
-      - echo Cloning GitOps repository...
+      - set -e
+      - echo "Cloning GitOps repository..."
       - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
       - cd food-frontend
-      - echo Verifying Kubernetes access...
+
+      - echo "Running tests..."
+      - apt-get install -y nodejs npm
+      - npm install
+      - npm test
+
+      - echo "Verifying Kubernetes access..."
       - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
       - kubectl config view
       - kubectl config current-context
 
   post_build:
     commands:
-      - echo Deployment completed.
+      - echo "Deployment completed."
 
 artifacts:
   files:
     - '**/*'
   discard-paths: yes
+
+cache:
+  paths:
+    - 'node_modules/**/*'
