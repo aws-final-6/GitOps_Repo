@@ -21,17 +21,18 @@ phases:
       - mv ./kubectl /usr/local/bin/
       - echo kubectl version
       - kubectl version --client
-      - kubectl config current-context
+      
 
   pre_build:
     commands:
       - echo Verifying EKS cluster access...
       - aws eks describe-cluster --region ${AWS_REGION} --name mlr-prd-eks-cls --debug
-      - kubectl get nodes
       - echo Setting up kubeconfig...
-      - aws eks --region ap-northeast-2 update-kubeconfig --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
+      - aws eks update-kubeconfig --region ${AWS_REGION} --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
       - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
+      - kubectl config current-context
+      - kubectl get nodes
 
   build:
     commands:
