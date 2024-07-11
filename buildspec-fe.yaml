@@ -30,11 +30,13 @@ phases:
 
   build:
     commands:
+      - echo Cloning GitOps repository...
+      - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
+      - cd food-frontend
       - echo Verifying Kubernetes access...
       - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
-      - echo Updating Kubernetes deployment with the new image...
-      - sed -i "s|${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:[^ ]*|${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:${IMAGE_TAG}|g" fe_deployment.yaml
-      - kubectl apply -f fe_deployment.yaml
+      - kubectl config view
+      - kubectl config current-context
 
   post_build:
     commands:
