@@ -1,53 +1,58 @@
-version: 0.2
-
-phases:
-  install:
-    commands:
-      - echo Setting up AWS CLI credentials...
-      - mkdir -p ~/.aws
-      - echo "[default]" > ~/.aws/credentials
-      - echo "aws_access_key_id=${AWS_ACCESS_SU_ID}" >> ~/.aws/credentials
-      - echo "aws_secret_access_key=${AWS_SECRET_SU_KEY}" >> ~/.aws/credentials
-      - echo "[default]" > ~/.aws/config
-      - echo "region=ap-northeast-2" >> ~/.aws/config
-      - cat ~/.aws/credentials
-      - cat ~/.aws/config
-      - echo Verifying AWS CLI credentials...
-      - aws sts get-caller-identity
-      - echo Setting up kubectl...
-      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - chmod +x kubectl
-      - mv kubectl /usr/local/bin/
-      - echo Logging in to Amazon ECR in Seoul region...
-      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-
-  pre_build:
-    commands:
-      - echo Verifying EKS cluster access...
-      - aws eks describe-cluster --region ap-northeast-2 --name mlr-prd-eks-cls
-      - echo Setting up kubeconfig...
-      - aws eks --region ap-northeast-2 update-kubeconfig --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
-      - echo "Kubeconfig file contents:"
-      - cat ~/.kube/config
-      - echo Pulling the latest Docker images from ECR...
-      - docker pull ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:latest
-
-  build:
-    commands:
-      - echo Cloning GitOps repository...
-      - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
-      - cd food-frontend
-      - echo Verifying Kubernetes access...
-      - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
-      - echo Updating Kubernetes deployment with the new image...
-      - sed -i "s|${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:[^ ]*|${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:${IMAGE_TAG}|g" fe_deployment.yaml
-      - kubectl apply -f fe_deployment.yaml
-
-  post_build:
-    commands:
-      - echo Deployment completed.
-
-artifacts:
-  files:
-    - '**/*'
-  discard-paths: yes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlr-prd-fe-dpl
+  namespace: mlr-prd-fe-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      nodeSelector:
+        alpha.eksctl.io/nodegroup-name: mlr-prd-eks-app-ng
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - frontend
+              topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: wait-for-backend
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-prd-be-svc-nod.mlr-prd-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
+      containers:
+        - name: frontend
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-fe-img:1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-prd-fe-cm
+                  key: API_URL
+            - name: FAST_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-prd-fe-cm
+                  key: FAST_API_URL
+            - name: OCR_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-prd-fe-cm
+                  key: OCR_API_URL
+            - name: BEDROCK_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-prd-fe-cm
+                  key: BEDROCK_API_URL
