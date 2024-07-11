@@ -36,7 +36,7 @@ phases:
       - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
       - kubectl config current-context
-      - kubectl get nodes
+      - kubectl get nodes --v=8
 
   build:
     commands:
