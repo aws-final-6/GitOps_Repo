@@ -18,6 +18,7 @@ phases:
       - aws eks describe-cluster --region ap-northeast-2 --name mlr-prd-eks-cls
       - echo Setting up kubeconfig...
       - aws eks --region ap-northeast-2 update-kubeconfig --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
+      - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
 
   build:
@@ -25,8 +26,9 @@ phases:
       - echo Cloning repository...
       - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
       - cd food-frontend
-      - echo Updating Kubernetes deployment with the new image...
+      - echo Verifying Kubernetes access...
       - kubectl get nodes
+      - echo Updating Kubernetes deployment with the new image...
       - kubectl set image deployment/my-deployment my-container=${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-fe-img:${IMAGE_TAG} --record
 
   post_build:
