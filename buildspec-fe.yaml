@@ -29,6 +29,8 @@ phases:
       - aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME} || { echo 'kubeconfig update failed' ; exit 1; }
       - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
+      - echo Pulling the latest Docker images from ECR...
+      - docker pull ${ECR_URL}/mylittlerecipebook/mlr-prd-fe-img:latest
 
   build:
     commands:
