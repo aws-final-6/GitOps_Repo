@@ -15,9 +15,13 @@ spec:
         app: backend
         tier: ocr
     spec:
+	  initContainers:
+        - name: wait-for-ocr
+          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-dev-ocr-svc.mlr-dev-ocr-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: ocr-backend
-          image: 192.168.56.200/mylittlerecipebook/ocr-backend:latest
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
