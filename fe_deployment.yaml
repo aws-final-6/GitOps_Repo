@@ -16,17 +16,17 @@ phases:
       - aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
       - aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
       - aws configure set region ${AWS_REGION}
+      - echo Verifying AWS CLI credentials...
+      - aws sts get-caller-identity
       - echo Setting up kubectl...
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
       - echo Logging in to Amazon ECR in Seoul region...
-      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URL}
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URL} || { echo 'Docker login failed' ; exit 1; }
 
   pre_build:
     commands:
-      - echo Verifying AWS CLI credentials...
-      - aws sts get-caller-identity
       - echo Verifying EKS cluster access...
       - aws eks describe-cluster --region ${AWS_REGION} --name ${CLUSTER_NAME}
       - echo Setting up kubeconfig...
