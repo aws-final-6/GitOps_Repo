@@ -46,11 +46,8 @@ spec:
                 configMapKeyRef:
                   name: mlr-prd-fe-cm
                   key: FAST_API_URL
-<<<<<<< HEAD
             - name: OCR_API_URL
               valueFrom:
                 configMapKeyRef:
                   name: mlr-prd-fe-cm
                   key: OCR_API_URL
-=======
->>>>>>> 587b713b0c4fd0dba66f3bf89e58eac88593b0dc
