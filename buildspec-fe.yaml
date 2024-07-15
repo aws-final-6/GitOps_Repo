@@ -10,10 +10,15 @@ phases:
       - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
       - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
       - echo "[default]" > ~/.aws/config
-      - echo "region=${AWS_REGION}" >> ~/..aws/config
+      - echo "region=ap-northeast-2" >> ~/.aws/config
       - echo "AWS CLI credentials and config:"
       - cat ~/.aws/credentials
       - cat ~/.aws/config
+
+      - echo Verifying environment variables...
+      - echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+      - echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+      - echo "AWS_REGION: ap-northeast-2"
 
       - echo Verifying AWS CLI credentials...
       - aws sts get-caller-identity || { echo 'AWS CLI credentials verification failed' ; exit 1; }
@@ -39,10 +44,10 @@ phases:
     commands:
       - set -e
       - echo Verifying EKS cluster access...
-      - aws eks describe-cluster --region ${AWS_REGION} --name ${EKS_CLUSTER_NAME} --debug
+      - aws eks describe-cluster --region ap-northeast-2 --name ${EKS_CLUSTER_NAME} --debug
 
       - echo Setting up kubeconfig...
-      - aws eks update-kubeconfig --region ${AWS_REGION} --name ${EKS_CLUSTER_NAME} || { echo 'kubeconfig update failed' ; exit 1; }
+      - aws eks update-kubeconfig --region ap-northeast-2 --name ${EKS_CLUSTER_NAME} || { echo 'kubeconfig update failed' ; exit 1; }
 
       - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
