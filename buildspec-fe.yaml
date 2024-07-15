@@ -40,6 +40,7 @@ phases:
       - kubectl config current-context
 
       - echo "Getting Kubernetes nodes..."
+      - aws eks get-token --region ${AWS_REGION} --cluster-name ${KUBERNETES_CLUSTER_NAME} > /dev/null 2>&1
       - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
 
   build:
