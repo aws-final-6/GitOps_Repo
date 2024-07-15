@@ -15,11 +15,6 @@ phases:
       - cat ~/.aws/credentials
       - cat ~/.aws/config
 
-      - echo Verifying environment variables...
-      - echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-      - echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
-      - echo "AWS_REGION: $AWS_REGION"
-
       - echo Verifying AWS CLI credentials...
       - aws sts get-caller-identity || { echo 'AWS CLI credentials verification failed' ; exit 1; }
       - echo AWS CLI credentials are valid.
