@@ -10,8 +10,6 @@ env:
     TOKEN_GITHUB: "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"
     KUBERNETES_CLUSTER_NAME: "mlr-prd-eks-cls"
     KUBERNETES_NAMESPACE: "default"
-  parameter-store:
-    TOKEN_GITHUB: "/codebuild/github/token"
 
 phases:
   install:
