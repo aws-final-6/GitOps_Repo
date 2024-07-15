@@ -60,7 +60,7 @@ phases:
       - echo Deploying to Kubernetes...
       - kubectl apply -f fe_deployment.yaml
 
-  artifacts:
-    files:
-      - '**/*'
-    discard-paths: yes
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
