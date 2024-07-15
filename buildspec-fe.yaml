@@ -26,18 +26,32 @@ phases:
 
   pre_build:
     commands:
-      - echo Pre-build phase started...
-      - pwd
-      - ls -la
-      - GITHUB_COMMIT_HASH=$(git rev-parse --short HEAD)
+      - set -e
+      - echo Verifying EKS cluster access...
+      - aws eks describe-cluster --region ${AWS_REGION} --name mlr-prd-eks-cls --debug
+
+      - echo Setting up kubeconfig...
+      - aws eks update-kubeconfig --region ${AWS_REGION} --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
+
+      - echo "Kubeconfig file contents:"
+      - cat ~/.kube/config
+      - kubectl config current-context
+
+      - echo "Debugging kubectl configuration..."
+      - kubectl config view
+      - kubectl config current-context
+
+      - echo "Getting Kubernetes nodes..."
+      - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
 
   build:
     commands:
-      - docker build -t aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH -f Dockerfile .
-      - docker tag aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH
-      - docker tag aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB-latest:latest
-      - docker push $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH
-      - docker push $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB-latest:latest
+      - set -e
+      - echo Cloning GitOps repository...
+      - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
+
+      - echo Verifying Kubernetes access...
+      - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
 
  # post_build:
  #   commands:
