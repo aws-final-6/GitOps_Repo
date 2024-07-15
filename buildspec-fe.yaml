@@ -1,82 +1,54 @@
 version: 0.2
 
+env:
+  variables:
+    GITHUB_REPO: "https://github.com/aws-final-6/GitOps_Repo.git"
+    GITHUB_DIR: "GitOps_Repo"
+    AWS_REGION: "ap-northeast-2"
+    AWS_EKS_REGION: "ap-northeast-2"
+    ECR_REGISTRY: "761278642645.dkr.ecr.ap-northeast-2.amazonaws.com"
+    TOKEN_GITHUB: "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"
+    KUBERNETES_CLUSTER_NAME: "mlr-prd-eks-cls"
+    KUBERNETES_NAMESPACE: "default"
+  parameter-store:
+    TOKEN_GITHUB: "/codebuild/github/token"
+
 phases:
   install:
     commands:
       - echo Logging in to Amazon ECR Public...
       - aws --version
-      - export AWS_REGION=ap-northeast-2
-      - export ECR_REGISTRY=761278642645.dkr.ecr.ap-northeast-2.amazonaws.com
       - export LOGIN_PASSWORD=$(aws ecr-public get-login-password --region $AWS_REGION)
       - echo $LOGIN_PASSWORD | docker login --username AWS --password-stdin $ECR_REGISTRY
-      - export AWS_ACCESS_KEY_ID=AKIA3CP56HHK356EWBOZ
-      - export AWS_SECRET_ACCESS_KEY=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
-      - export ACCOUNT_ID=761278642645
-
-      - set -e
-      - pip install --upgrade awscli
-      - aws configure set region $AWS_REGION
-      - echo Setting up AWS CLI credentials...
-      - mkdir -p ~/.aws
-      - echo "[default]" > ~/.aws/credentials
-      - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
-      - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
-      - echo "[default]" > ~/.aws/config
-      - echo "region=${AWS_REGION}" >> ~/.aws/config
-      - echo "AWS CLI credentials and config:"
-      - cat ~/.aws/credentials
-      - cat ~/.aws/config
-      - echo Verifying AWS CLI credentials...
-      - aws sts get-caller-identity
-
-      - echo Setting up kubectl...
-      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      - chmod +x ./kubectl
-      - mv ./kubectl /usr/local/bin/
-
-      - echo Setting up aws-iam-authenticator...
-      - curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator
-      - chmod +x ./aws-iam-authenticator
-      - mv ./aws-iam-authenticator /usr/local/bin/
-
-      - echo kubectl version
-      - kubectl version --client
+      - AWS_ACCESS_KEY_ID=AKIA3CP56HHK356EWBOZ
+      - AWS_SECRET_ACCESS_KEY=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
+      - ACCOUNT_ID=761278642645
 
   pre_build:
     commands:
-      - set -e
-      - echo Verifying EKS cluster access...
-      - aws eks describe-cluster --region ${AWS_REGION} --name mlr-prd-eks-cls --debug
-
-      - echo Setting up kubeconfig...
-      - aws eks update-kubeconfig --region ${AWS_REGION} --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
-
-      - echo "Kubeconfig file contents:"
-      - cat ~/.kube/config
-      - kubectl config current-context
-
-      - echo "Debugging kubectl configuration..."
-      - kubectl config view
-      - kubectl config current-context
-
-      - echo "Getting Kubernetes nodes..."
-      - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
+      - echo Pre-build phase started...
+      - pwd
+      - ls -la
+      - GITHUB_COMMIT_HASH=$(git rev-parse --short HEAD)
 
   build:
     commands:
-      - set -e
-      - echo Cloning GitOps repository...
-      - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-frontend.git
-      - cd food-frontend
+      - docker build -t aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH -f Dockerfile .
+      - docker tag aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH
+      - docker tag aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB-latest:latest
+      - docker push $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB:$GITHUB_COMMIT_HASH
+      - docker push $ECR_REGISTRY/aws-school-project7-cicd-aws-repo-GITHUB-latest:latest
 
-      - echo Verifying Kubernetes access...
-      - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
+ # post_build:
+ #   commands:
+ #     - echo Updating kubeconfig...
+ #     - aws eks --region $AWS_EKS_REGION update-kubeconfig --name $KUBERNETES_CLUSTER_NAME
+ #     - cat ~/.kube/config
+ #     - kubectl config get-contexts
+ #     - echo Deploying to Kubernetes...
+ #     - kubectl apply -f deployment.yaml
 
-  post_build:
-    commands:
-      - echo Deployment completed.
-
-artifacts:
-  files:
-    - '**/*'
-  discard-paths: yes
+  artifacts:
+    files:
+      - '**/*'
+    discard-paths: yes
