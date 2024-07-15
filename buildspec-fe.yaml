@@ -5,7 +5,7 @@ phases:
     commands:
       - set -e
       - pip install --upgrade awscli
-      - aws configre set region ap-northeast-2
+      - aws configure set region ap-northeast-2
       - echo Setting up AWS CLI credentials...
       - mkdir -p ~/.aws
       - echo "[default]" > ~/.aws/credentials
