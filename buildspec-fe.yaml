@@ -53,14 +53,14 @@ phases:
       - echo Verifying Kubernetes access...
       - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
 
- # post_build:
- #   commands:
- #     - echo Updating kubeconfig...
- #     - aws eks --region $AWS_EKS_REGION update-kubeconfig --name $KUBERNETES_CLUSTER_NAME
- #     - cat ~/.kube/config
- #     - kubectl config get-contexts
- #     - echo Deploying to Kubernetes...
- #     - kubectl apply -f deployment.yaml
+  post_build:
+    commands:
+      - echo Updating kubeconfig...
+      - aws eks --region $AWS_EKS_REGION update-kubeconfig --name $KUBERNETES_CLUSTER_NAME
+      - cat ~/.kube/config
+      - kubectl config get-contexts
+      - echo Deploying to Kubernetes...
+      - kubectl apply -f fe_deployment.yaml
 
   artifacts:
     files:
