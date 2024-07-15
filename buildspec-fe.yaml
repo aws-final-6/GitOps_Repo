@@ -35,12 +35,10 @@ phases:
       - cat ~/.kube/config
       - kubectl config current-context
 
-      - echo "Debugging kubectl configuration..."
-      - kubectl config view
-      - kubectl config current-context
-
       - echo "Getting Kubernetes nodes..."
-      - aws eks get-token --region ${AWS_REGION} --cluster-name ${KUBERNETES_CLUSTER_NAME} > /dev/null 2>&1
+      - TOKEN=$(aws eks get-token --region ${AWS_REGION} --cluster-name ${KUBERNETES_CLUSTER_NAME} --output json | jq -r '.status.token')
+      - echo $TOKEN
+      - export KUBECONFIG=~/.kube/config
       - kubectl get nodes || { echo 'kubectl get nodes failed' ; kubectl config view ; kubectl config current-context ; exit 1; }
 
   build:
