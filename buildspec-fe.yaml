@@ -14,13 +14,13 @@ env:
 phases:
   install:
     commands:
-      - echo Logging in to Amazon ECR Public...
+      - echo Logging in to Amazon ECR...
       - aws --version
-      - export LOGIN_PASSWORD=$(aws ecr-public get-login-password --region $AWS_REGION)
+      - export LOGIN_PASSWORD=$(aws ecr get-login-password --region $AWS_REGION)
       - echo $LOGIN_PASSWORD | docker login --username AWS --password-stdin $ECR_REGISTRY
-      - AWS_ACCESS_KEY_ID=AKIA3CP56HHK356EWBOZ
-      - AWS_SECRET_ACCESS_KEY=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
-      - ACCOUNT_ID=761278642645
+      - export AWS_ACCESS_KEY_ID=AKIA3CP56HHK356EWBOZ
+      - export AWS_SECRET_ACCESS_KEY=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
+      - export ACCOUNT_ID=761278642645
 
   pre_build:
     commands:
