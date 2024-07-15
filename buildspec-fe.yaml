@@ -37,7 +37,7 @@ phases:
       - aws eks describe-cluster --region ${AWS_REGION} --name mlr-prd-eks-cls --debug
 
       - echo Setting up kubeconfig...
-      - aws eks update-kubeconfig --region ${AWS_REGION} --name mlr-prd-eks-cls || { echo 'kubeconfig update failed' ; exit 1; }
+      - aws eks update-kubeconfig --region ${AWS_REGION} --name mlr-prd-eks-cls
 
       - echo "Kubeconfig file contents:"
       - cat ~/.kube/config
