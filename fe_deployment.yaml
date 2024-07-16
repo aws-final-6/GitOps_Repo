@@ -56,3 +56,8 @@ spec:
                 configMapKeyRef:
                   name: mlr-prd-fe-cm
                   key: BEDROCK_API_URL
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
