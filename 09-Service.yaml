@@ -45,8 +45,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlr-prd-be-svc-ocr
-  namespace: mlr-prd-be-ns
+  name: mlr-dev-be-svc-ocr
+  namespace: mlr-dev-be-ns
 spec:
   selector:
     app: backend
