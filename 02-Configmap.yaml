@@ -6,6 +6,8 @@ metadata:
 data:
   API_URL: "http://mlr-dev-be-svc-nod.mlr-dev-be-ns.svc.cluster.local:3000"
   FAST_API_URL: "http://mlr-dev-be-svc-fap.mlr-dev-be-ns.svc.cluster.local:5000"
+  OCR_API_URL: "http://mlr-dev-be-svc-ocr.mlr-dev-be-ns.svc.cluster.local:8000"
+  BEDROCK_API_URL: "https://14aw41405g.execute-api.us-east-1.amazonaws.com"
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -34,3 +34,8 @@ spec:
                 secretKeyRef:
                   name: mlr-dev-be-sec-fap
                   key: YOUTUBE_API_KEY
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2

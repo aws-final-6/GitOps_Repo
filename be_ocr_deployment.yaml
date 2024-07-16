@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlr-dev-be-dpl-ocr
+  namespace: mlr-dev-be-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+      tier: ocr
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: ocr
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: 192.168.56.200/mylittlerecipebook/busybox:1.31
+          command: ['sh', '-c', "until nslookup mlr-dev-db-svc.mlr-dev-db-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
+      containers:
+        - name: ocr-backend
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr:1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2

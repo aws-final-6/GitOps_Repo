@@ -34,3 +34,18 @@ spec:
                 configMapKeyRef:
                   name: mlr-dev-fe-cm
                   key: FAST_API_URL
+            - name: OCR_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-dev-fe-cm
+                  key: OCR_API_URL
+            - name: BEDROCK_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-dev-fe-cm
+                  key: BEDROCK_API_URL
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
