@@ -20,20 +20,20 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: tier
-                operator: In
-                values:
-                - fast
-            topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - fast
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-redis
           image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
           command: ['sh', '-c', "until nslookup mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: backend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-fap:1
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-fap:10
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
@@ -46,3 +46,8 @@ spec:
                 secretKeyRef:
                   name: mlr-prd-be-sec-fap
                   key: YOUTUBE_API_KEY
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2

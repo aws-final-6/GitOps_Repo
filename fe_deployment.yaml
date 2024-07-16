@@ -31,7 +31,7 @@ spec:
           command: ['sh', '-c', "until nslookup mlr-prd-be-svc-nod.mlr-prd-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
       containers:
         - name: frontend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-fe-img:1
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-fe-img:3
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -56,3 +56,8 @@ spec:
                 configMapKeyRef:
                   name: mlr-prd-fe-cm
                   key: BEDROCK_API_URL
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2

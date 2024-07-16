@@ -20,20 +20,20 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: tier
-                operator: In
-                values:
-                - node
-            topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - node
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-db
           image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
           command: ['sh', '-c', "until nslookup mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
       containers:
         - name: backend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-nod:1
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-nod:4
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -123,3 +123,8 @@ spec:
                 secretKeyRef:
                   name: mlr-prd-be-sec-nod
                   key: MYSQL_DATABASE
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
