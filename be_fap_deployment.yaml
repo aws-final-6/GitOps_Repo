@@ -20,20 +20,20 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: tier
-                operator: In
-                values:
-                - fast
-            topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - fast
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: wait-for-redis
           image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/busybox:1.31
           command: ['sh', '-c', "until nslookup mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: backend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-fap:1
+          image: ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-fap:${CODEBUILD_BUILD_NUMBER}
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
