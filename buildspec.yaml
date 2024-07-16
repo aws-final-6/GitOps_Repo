@@ -22,7 +22,7 @@ phases:
       - echo "Getting EKS Cluster..."
       - aws eks describe-cluster --region ${AWS_EKS_REGION} --name ${CLUSTER_NAME} --debug
       - echo "Update Kubeconfig..."
-      - aws eks update-kubeconfig --region ${AWS_EKS_REGION} --name ${CLUSTER_NAME} --role-arn arn:aws:iam::761278642645:role/service-role/mlr-prd-cd-role-eks --debug
+      - aws eks update-kubeconfig --region ${AWS_EKS_REGION} --name ${CLUSTER_NAME} --debug
       - echo "Contents of kubeconfig:"
       - cat ~/.kube/config
       - echo "Getting Kubernetes nodes..."
