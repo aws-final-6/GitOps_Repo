@@ -5,6 +5,7 @@ phases:
     commands:
       - echo check aws-cli version
       - aws --version
+      - pip install --upgrade awscli
       - echo install kubectl
       - curl -LO https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
       - curl -LO https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl.sha256
