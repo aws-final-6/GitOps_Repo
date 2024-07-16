@@ -20,12 +20,16 @@ phases:
   pre_build:
     commands:
       - echo "Getting EKS Cluster..."
-      - aws eks describe-cluster --region ${AWS_EKS_REGION} --name ${CLUSTER_NAME} --debug
+      - aws eks describe-cluster --region ${AWS_EKS_REGION} --name ${CLUSTER_NAME}
       - echo "Update Kubeconfig..."
-      - aws eks update-kubeconfig --region ${AWS_EKS_REGION} --name ${CLUSTER_NAME} --debug
+      - aws eks get-token --cluster-name ${CLUSTER_NAME} | kubectl apply -f -
+      - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_EKS_REGION}
+      - TOKEN=$(aws eks get-token --cluster-name ${CLUSTER_NAME} --region ${AWS_EKS_REGION} | jq -r '.status.token')
+      - kubectl --token=$TOKEN get nodes
       - echo "Contents of kubeconfig:"
       - cat ~/.kube/config
       - echo "Getting Kubernetes nodes..."
+      - aws configure set default.sts_regional_endpoints regional
       - kubectl get nodes --v=8
 
   build:
