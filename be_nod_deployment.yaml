@@ -123,3 +123,8 @@ spec:
                 secretKeyRef:
                   name: mlr-prd-be-sec-nod
                   key: MYSQL_DATABASE
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
