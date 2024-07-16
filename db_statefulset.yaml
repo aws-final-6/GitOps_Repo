@@ -27,7 +27,7 @@ spec:
                       - SPOT
       containers:
       - name: mysql
-        image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-db-img-msq
+        image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-db-img-msq:1
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
