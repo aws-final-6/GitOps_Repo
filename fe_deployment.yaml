@@ -41,7 +41,6 @@ spec:
             limits:
               cpu: 100m
               memory: 96Mi
-
           env:
             - name: API_URL
               valueFrom:
