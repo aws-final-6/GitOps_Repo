@@ -9,20 +9,20 @@ spec:
     kind: Deployment
     name: mlr-prd-fe-dpl
   minReplicas: 3
-  maxReplicas: 8
+  maxReplicas: 9
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 65
   - type: Resource
     resource:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 80
+        averageUtilization: 75
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -34,15 +34,15 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-prd-be-dpl-fap  
-  minReplicas: 3
-  maxReplicas: 5
+  minReplicas: 2
+  maxReplicas: 6
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 75
   - type: Resource
     resource:
       name: memory
@@ -61,7 +61,7 @@ spec:
     kind: Deployment
     name: mlr-prd-be-dpl-nod  
   minReplicas: 3
-  maxReplicas: 5
+  maxReplicas: 9
   metrics:
   - type: Resource
     resource:
@@ -86,18 +86,18 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-prd-be-dpl-ocr
-  minReplicas: 3
-  maxReplicas: 5
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 75
   - type: Resource
     resource:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 85
+        averageUtilization: 80
