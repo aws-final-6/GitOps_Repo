@@ -25,11 +25,11 @@ spec:
             - containerPort: 3000
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 25m
+              memory: 48Mi
             limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 100m
+              memory: 96Mi
           env:
             - name: API_URL
               valueFrom:
