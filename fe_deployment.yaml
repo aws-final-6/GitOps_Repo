@@ -26,10 +26,10 @@ spec:
           resources:
             requests:
               cpu: 250m
-              memory: 128Mi
+              memory: 256Mi
             limits:
               cpu: 500m
-              memory: 256Mi
+              memory: 512Mi
           env:
             - name: API_URL
               valueFrom:
