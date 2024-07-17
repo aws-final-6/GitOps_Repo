@@ -4,7 +4,6 @@ metadata:
   name: mlr-prd-be-dpl-fap
   namespace: mlr-prd-be-ns
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: backend
@@ -46,6 +45,13 @@ spec:
                 secretKeyRef:
                   name: mlr-prd-be-sec-fap
                   key: YOUTUBE_API_KEY
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
   strategy:
     type: RollingUpdate
     rollingUpdate:

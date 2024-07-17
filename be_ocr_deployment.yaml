@@ -4,7 +4,6 @@ metadata:
   name: mlr-prd-be-dpl-ocr
   namespace: mlr-prd-be-ns
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: backend
@@ -27,6 +26,14 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1.5Gi
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
