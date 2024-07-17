@@ -8,7 +8,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-dev-fe-dpl
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 8
   metrics:
   - type: Resource
@@ -34,7 +34,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-dev-be-dpl-fap  
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 5
   metrics:
   - type: Resource
@@ -60,7 +60,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-dev-be-dpl-nod  
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 5
   metrics:
   - type: Resource
@@ -86,7 +86,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-dev-be-dpl-ocr
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 5
   metrics:
   - type: Resource

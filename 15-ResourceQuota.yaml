@@ -5,10 +5,10 @@ metadata:
   namespace: mlr-dev-fe-ns
 spec:
   hard:
-    requests.cpu: "6"
-    requests.memory: 3Gi
-    limits.cpu: "12"
-    limits.memory: 6Gi
+    requests.cpu: "2"
+    requests.memory: 1Gi
+    limits.cpu: "4"
+    limits.memory: 2Gi
 ---
 apiVersion: v1
 kind: ResourceQuota
