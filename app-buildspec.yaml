@@ -48,10 +48,10 @@ phases:
       # - kubectl apply -f 07-RoleBinding.yaml
       - kubectl apply -f 08-Ingress.yaml
       - kubectl apply -f 09-Service.yaml
-      # - kubectl apply -f 12-HPA.yaml
-      # - kubectl apply -f 13-LimitRage.yaml
-      # - kubectl apply -f 14-Netpol.yaml
-      # - kubectl apply -f 15-ResourceQuota.yaml
+      - kubectl apply -f 12-HPA.yaml
+      - kubectl apply -f 13-LimitRage.yaml
+      - kubectl apply -f 14-Netpol.yaml
+      - kubectl apply -f 15-ResourceQuota.yaml
       - echo "Apply application container manifest"
       - kubectl apply -f be_fap_deployment.yaml
       - kubectl apply -f be_nod_deployment.yaml
