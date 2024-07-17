@@ -42,15 +42,9 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
+        - name: mysql-storage
           mountPath: /var/lib/mysql
-  volumeClaimTemplates:
-  - metadata:
-      name: mysql-persistent-storage
-      namespace: mlr-dev-db-ns
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "openebs-hostpath"
-      resources:
-        requests:
-          storage: 10Gi
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mlr-dev-db-pvc
