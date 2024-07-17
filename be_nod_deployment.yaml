@@ -4,7 +4,6 @@ metadata:
   name: mlr-dev-be-dpl-nod
   namespace: mlr-dev-be-ns
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: backend
