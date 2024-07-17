@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: frontend-network-policy
+  name: mlr-dev-fe-np
   namespace: mlr-dev-fe-ns
 spec:
   podSelector: {}
@@ -46,7 +46,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: backend-unified-network-policy
+  name: mlr-dev-be-np
   namespace: mlr-dev-be-ns
 spec:
   podSelector:
@@ -109,7 +109,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: database-network-policy
+  name: mlr-dev-db-np
   namespace: mlr-dev-db-ns
 spec:
   podSelector:
@@ -154,7 +154,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: redis-network-policy
+  name: mlr-dev-rds-np
   namespace: mlr-dev-rds-ns
 spec:
   podSelector: {}

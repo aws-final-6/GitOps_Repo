@@ -1,42 +1,35 @@
-# # LimitRange for Pod or Container
-# apiVersion: v1
-# kind: LimitRange
-# metadata:
-#   name: mlr-dev-fe-lrg
-#   namespace: mlr-dev-fe-ns
-# spec:
-#   limits:
-#   - type: Container
-#     defaultRequest:
-#       cpu: "200m"
-#       memory: "256Mi"
-#     default:
-#       cpu: "400m"
-#       memory: "512Mi"
-#     max:
-#       cpu: 600m
-#       memory: 512Mi
-#     min:
-#       cpu: 100m
-#       memory: 256Mi
-# ---
-# apiVersion: v1
-# kind: LimitRange
-# metadata:
-#   name: mlr-dev-be-lrg
-#   namespace: mlr-dev-be-ns
-# spec:
-#   limits:
-#   - type: Container
-#     defaultRequest:
-#       cpu: "200m"
-#       memory: "256Mi"
-#     default:
-#       cpu: "400m"
-#       memory: "512Mi"
-#     max:
-#       cpu: 600m
-#       memory: 512Mi
-#     min:
-#       cpu: 100m
-#       memory: 256Mi
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mlr-dev-fe-lr
+  namespace: mlr-dev-fe-ns
+spec:
+  limits:
+  - default:
+      cpu: 500m
+      memory: 256Mi
+    defaultRequest:
+      cpu: 250m
+      memory: 128Mi
+    type: Container
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mlr-dev-be-lr
+  namespace: mlr-dev-be-ns
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: 500m
+      memory: 512Mi
+    defaultRequest:
+      cpu: 100m
+      memory: 64Mi
+    max:
+      cpu: 2
+      memory: 2Gi
+    min:
+      cpu: 50m
+      memory: 32Mi

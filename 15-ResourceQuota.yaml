@@ -1,29 +1,23 @@
-# apiVersion: v1
-# kind: ResourceQuota
-# metadata:
-#   name: frontend-RQ
-#   namespace: frontend-ns
-# spec:
-#   hard:
-#     requests.cpu: '1'
-#     requests.memory: 1Gi
-#     limits.cpu: '2'
-#     limits.memory: 2Gi
-#     pods: '10'
-#     persistentvolumeclaims: '5'
-#     requests.storage: 5Gi
-# ---
-# apiVersion: v1
-# kind: ResourceQuota
-# metadata:
-#   name: backend-RQ
-#   namespace: backend-ns
-# spec:
-#   hard:
-#     requests.cpu: '1'
-#     requests.memory: 1Gi
-#     limits.cpu: '2'
-#     limits.memory: 2Gi
-#     pods: '10'
-#     persistentvolumeclaims: '5'
-#     requests.storage: 5Gi
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mlr-dev-fe-rq
+  namespace: mlr-dev-fe-ns
+spec:
+  hard:
+    requests.cpu: "6"
+    requests.memory: 3Gi
+    limits.cpu: "12"
+    limits.memory: 6Gi
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mlr-dev-be-rq
+  namespace: mlr-dev-be-ns
+spec:
+  hard:
+    requests.cpu: "8"
+    requests.memory: 8Gi
+    limits.cpu: "16"
+    limits.memory: 16Gi

@@ -34,6 +34,13 @@ spec:
                 secretKeyRef:
                   name: mlr-dev-be-sec-fap
                   key: YOUTUBE_API_KEY
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
   strategy:
     type: RollingUpdate
     rollingUpdate:
