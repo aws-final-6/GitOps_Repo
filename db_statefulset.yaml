@@ -17,6 +17,13 @@ spec:
       containers:
       - name: mysql
         image: 192.168.56.200/mylittlerecipebook/mlr-dev-db-img-msq:1.0
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1
+            memory: 2Gi
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:

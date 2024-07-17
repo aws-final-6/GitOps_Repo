@@ -45,6 +45,13 @@ spec:
           - /mnt/config/redis.conf
         ports:
         - containerPort: 6379
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
         volumeMounts:
         - name: config
           mountPath: /mnt/config

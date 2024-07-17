@@ -6,11 +6,11 @@ metadata:
 spec:
   limits:
   - default:
-      cpu: 100m
-      memory: 96Mi
+      cpu: 300m
+      memory: 256Mi
     defaultRequest:
-      cpu: 25m
-      memory: 48Mi
+      cpu: 100m
+      memory: 128Mi
     type: Container
 ---
 apiVersion: v1
@@ -22,14 +22,56 @@ spec:
   limits:
   - type: Container
     default:
-      cpu: 500m
+      cpu: 600m
       memory: 512Mi
     defaultRequest:
-      cpu: 100m
-      memory: 64Mi
+      cpu: 200m
+      memory: 128Mi
     max:
       cpu: 2
       memory: 2Gi
     min:
+      cpu: 100m
+      memory: 64Mi
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mlr-dev-db-lr
+  namespace: mlr-dev-db-ns
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: 1
+      memory: 2Gi
+    defaultRequest:
+      cpu: 500m
+      memory: 1Gi
+    max:
+      cpu: 2
+      memory: 4Gi
+    min:
+      cpu: 100m
+      memory: 128Mi
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mlr-dev-rds-lr
+  namespace: mlr-dev-rds-ns
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: 200m
+      memory: 512Mi
+    defaultRequest:
+      cpu: 100m
+      memory: 256Mi
+    max:
+      cpu: 500m
+      memory: 1Gi
+    min:
       cpu: 50m
-      memory: 32Mi
+      memory: 64Mi

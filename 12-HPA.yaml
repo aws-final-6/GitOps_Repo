@@ -35,14 +35,14 @@ spec:
     kind: Deployment
     name: mlr-dev-be-dpl-fap  
   minReplicas: 3
-  maxReplicas: 5
+  maxReplicas: 6
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 75
   - type: Resource
     resource:
       name: memory
@@ -61,7 +61,7 @@ spec:
     kind: Deployment
     name: mlr-dev-be-dpl-nod  
   minReplicas: 3
-  maxReplicas: 5
+  maxReplicas: 7
   metrics:
   - type: Resource
     resource:
@@ -86,15 +86,15 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: mlr-dev-be-dpl-ocr
-  minReplicas: 3
-  maxReplicas: 5
+  minReplicas: 2
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 75
   - type: Resource
     resource:
       name: memory

@@ -37,6 +37,13 @@ spec:
           - --sentinel
         ports:
         - containerPort: 26379
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
         volumeMounts:
         - name: sentinel-config
           mountPath: /mnt/sentinel
