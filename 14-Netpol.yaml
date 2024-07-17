@@ -1,109 +1,197 @@
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: mlr-dev-fe-np
-#   namespace: mlr-dev-fe-ns
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app: frontend
-#   policyTypes:
-#   - Ingress
-#   - Egress
-#   ingress:
-#   - from:
-#     - namespaceSelector:
-#         matchLabels:
-#           name: ingress-nginx
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-be-ns
-#     ports:
-#     - protocol: TCP
-#       port: 80
-#     - protocol: TCP
-#       port: 443
-#     - protocol: TCP
-#       port: 3000
-#   egress:
-#   - to:
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-be-ns
-#     ports:
-#     - protocol: TCP
-#       port: 3000
-#     - protocol: TCP
-#       port: 4000
-#     - protocol: TCP
-#       port: 5000
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: mlr-dev-be-np
-#   namespace: mlr-dev-be-ns
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app: backend
-#   policyTypes:
-#   - Ingress
-#   - Egress
-#   ingress:
-#   - from:
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-fe-ns
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-db-ns
-#     - namespaceSelector:
-#         matchLabels:
-#           name: ingress-nginx
-#     ports:
-#     - protocol: TCP
-#       port: 3000
-#     - protocol: TCP
-#       port: 4000
-#     - protocol: TCP
-#       port: 5000
-#     - protocol: TCP
-#       port: 27017
-#   egress:
-#   - to:
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-db-ns
-#     ports:
-#     - protocol: TCP
-#       port: 27017
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: mlr-dev-db-np
-#   namespace: mlr-dev-db-ns
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app: database
-#   policyTypes:
-#   - Ingress
-#   - Egress
-#   ingress:
-#   - from:
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-be-ns
-#     ports:
-#     - protocol: TCP
-#       port: 27017
-#   egress:
-#   - to:
-#     - namespaceSelector:
-#         matchLabels:
-#           name: mlr-dev-be-ns
-#     ports:
-#     - protocol: TCP
-#       port: 27017
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-network-policy
+  namespace: mlr-dev-fe-ns
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 4000
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mlr-dev-be-ns
+    ports:
+    - protocol: TCP
+      port: 3000
+    - protocol: TCP
+      port: 5000
+    - protocol: TCP
+      port: 8000
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-unified-network-policy
+  namespace: mlr-dev-be-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mlr-dev-fe-ns
+    ports:
+    - protocol: TCP
+      port: 3000
+    - protocol: TCP
+      port: 5000
+    - protocol: TCP
+      port: 8000
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 3000
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mlr-dev-db-ns
+    ports:
+    - protocol: TCP
+      port: 3306
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mlr-dev-rds-ns
+    ports:
+    - protocol: TCP
+      port: 6379
+    - protocol: TCP
+      port: 26379
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-network-policy
+  namespace: mlr-dev-db-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mlr-dev-be-ns
+    ports:
+    - protocol: TCP
+      port: 3306
+  - from:
+    - podSelector:
+        matchLabels:
+          app: mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 3306
+      endPort: 32301
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-network-policy
+  namespace: mlr-dev-rds-ns
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mlr-dev-be-ns
+    ports:
+    - protocol: TCP
+      port: 6379
+    - protocol: TCP
+      port: 26379
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 6379
+    - protocol: TCP
+      port: 26379
+  egress:
+  - to:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 6379
+    - protocol: TCP
+      port: 26379
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
