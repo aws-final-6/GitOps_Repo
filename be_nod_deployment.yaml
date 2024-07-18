@@ -20,7 +20,7 @@ spec:
           command: ['sh', '-c', "until nslookup mlr-dev-db-svc.mlr-dev-db-ns.svc.cluster.local; do echo waiting for db; sleep 2; done"]
       containers:
         - name: backend
-          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-nod:34
+          image: 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-nod:6
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -116,7 +116,7 @@ spec:
               memory: 128Mi
             limits:
               cpu: 600m
-              memory: 512Mi      
+              memory: 512Mi
   strategy:
     type: RollingUpdate
     rollingUpdate:
