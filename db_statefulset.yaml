@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: 192.168.56.200/mylittlerecipebook/mlr-dev-db-img-msq:
+        image: 192.168.56.200/mylittlerecipebook/mlr-dev-db-img-msq:1
         resources:
           requests:
             cpu: 500m
