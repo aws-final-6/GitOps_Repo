@@ -23,6 +23,8 @@ data:
   NAVER_STATE: "1234567890"
   GOOGLE_REDIRECT_URI: "https://192.168.0.206:32423/back/auth/google/redirect"
   GOOGLE_SCOPE: "openid email"
+  BODYDATA_URI: "../data"
+  BODYDATA_FILENAME: "recipe_samples.csv"
 ---
 apiVersion: v1
 kind: ConfigMap
