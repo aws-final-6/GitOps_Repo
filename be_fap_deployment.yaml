@@ -32,7 +32,7 @@ spec:
           command: ['sh', '-c', "until nslookup mlr-prd-rds-svc.mlr-prd-rds-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: backend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-fap:14
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-fap:15
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
