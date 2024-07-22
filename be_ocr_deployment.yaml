@@ -22,7 +22,7 @@ spec:
           command: ['sh', '-c', "until nslookup mlr-prd-db-svc.mlr-prd-db-ns.svc.cluster.local; do echo waiting for redis; sleep 2; done"]
       containers:
         - name: ocr-backend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-ocr:6
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-be-img-ocr:7
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
