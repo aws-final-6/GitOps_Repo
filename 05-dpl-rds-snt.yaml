@@ -13,6 +13,15 @@ spec:
       labels:
         app: mlr-prd-rds-dpl-snt
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: eks.amazonaws.com/capacityType
+                    operator: NotIn
+                    values:
+                      - SPOT
       initContainers:
       - name: setup-sentinel
         image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/redis:7.0-alpine
