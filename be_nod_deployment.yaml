@@ -72,6 +72,16 @@ spec:
                 configMapKeyRef:
                   name: mlr-prd-be-cm-nod
                   key: GOOGLE_SCOPE
+            - name: BODYDATA_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-dev-be-cm-nod
+                  key: BODYDATA_URI
+            - name: BODYDATA_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mlr-dev-be-cm-nod
+                  key: BODYDATA_FILENAME
             - name: KAKAO_CLIENT_ID
               valueFrom:
                 secretKeyRef:
