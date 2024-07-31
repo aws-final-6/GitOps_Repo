@@ -30,7 +30,7 @@ spec:
           command: ['sh', '-c', "until nslookup mlr-prd-be-svc-nod.mlr-prd-be-ns.svc.cluster.local; do echo waiting for backend; sleep 2; done"]
       containers:
         - name: frontend
-          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-fe-img:24
+          image: 761278642645.dkr.ecr.ap-northeast-2.amazonaws.com/mylittlerecipebook/mlr-prd-fe-img:25
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
